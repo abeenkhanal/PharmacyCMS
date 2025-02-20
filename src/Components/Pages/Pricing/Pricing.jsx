@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { IoPencil, IoTrash, IoEye } from "react-icons/io5";
 
 const Pricing = () => {
-  const [plans] = useState([
+  const [plans, setPlans] = useState([
     {
       id: 1,
       name: "Basic Plan",
@@ -37,22 +37,71 @@ const Pricing = () => {
       ],
     },
   ]);
-
+  
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isPreviewModalOpen, setPreviewModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
+  const [newPlan, setNewPlan] = useState({
+    name: '',
+    monthlyPrice: '',
+    yearlyPrice: '',
+    features: '',
+  });
 
-  const openEditModal = () => setEditModalOpen(true);
-  const openDeleteModal = () => setDeleteModalOpen(true);
+  const openEditModal = (plan) => {
+    setSelectedPlan(plan);
+    setEditModalOpen(true);
+  };
+
+  const openDeleteModal = (plan) => {
+    setSelectedPlan(plan);
+    setDeleteModalOpen(true);
+  };
+
   const openPreviewModal = (plan) => {
     setSelectedPlan(plan);
     setPreviewModalOpen(true);
   };
+
   const closeModals = () => {
     setEditModalOpen(false);
     setDeleteModalOpen(false);
     setPreviewModalOpen(false);
+    setSelectedPlan(null);
+  };
+
+  const handleAddPlan = (e) => {
+    e.preventDefault();
+    if (!newPlan.name || !newPlan.monthlyPrice || !newPlan.yearlyPrice || !newPlan.features) {
+      alert('All fields are required!');
+      return;
+    }
+    const newPlanData = {
+      ...newPlan,
+      id: plans.length + 1,
+      features: newPlan.features.split(',').map(feature => feature.trim()),
+    };
+    setPlans([...plans, newPlanData]);
+    setNewPlan({ name: '', monthlyPrice: '', yearlyPrice: '', features: '' });
+  };
+
+  const handleEditPlan = () => {
+    if (!selectedPlan.name || !selectedPlan.monthlyPrice || !selectedPlan.yearlyPrice || !selectedPlan.features) {
+      alert('All fields are required!');
+      return;
+    }
+    const updatedPlans = plans.map(plan =>
+      plan.id === selectedPlan.id ? selectedPlan : plan
+    );
+    setPlans(updatedPlans);
+    closeModals();
+  };
+
+  const handleDeletePlan = () => {
+    const updatedPlans = plans.filter(plan => plan.id !== selectedPlan.id);
+    setPlans(updatedPlans);
+    closeModals();
   };
 
   return (
@@ -65,24 +114,36 @@ const Pricing = () => {
 
         <div className="p-6 bg-white rounded-lg shadow-md mb-6">
           <h2 className="text-lg font-semibold mb-4">Add New Plan</h2>
-          <form className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <form className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" onSubmit={handleAddPlan}>
             <input
               type="text"
               placeholder="Plan Name"
-              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+              value={newPlan.name}
+              onChange={(e) => setNewPlan({ ...newPlan, name: e.target.value })}
+              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
             <input
               type="text"
               placeholder="Monthly Price"
-              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+              value={newPlan.monthlyPrice}
+              onChange={(e) => setNewPlan({ ...newPlan, monthlyPrice: e.target.value })}
+              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
             <input
               type="text"
               placeholder="Yearly Price"
-              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+              value={newPlan.yearlyPrice}
+              onChange={(e) => setNewPlan({ ...newPlan, yearlyPrice: e.target.value })}
+              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
             <textarea
               placeholder="Features (comma-separated)"
-              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 col-span-full"></textarea>
+              value={newPlan.features}
+              onChange={(e) => setNewPlan({ ...newPlan, features: e.target.value })}
+              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 col-span-full"
+            />
             <button
-              type="button"
+              type="submit"
               className="px-6 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition">
               Add Plan
             </button>
@@ -99,9 +160,8 @@ const Pricing = () => {
                   <th className="p-4 text-left border-b border-gray-200">Monthly Price</th>
                   <th className="p-4 text-left border-b border-gray-200">Yearly Price</th>
                   <th className="p-4 text-left border-b border-gray-200">Features</th>
-                   <th className="p-4 text-center border-b border-gray-200">Actions</th>
+                  <th className="p-4 text-center border-b border-gray-200">Actions</th>
                   <th className="p-4 text-center border-b border-gray-200">Preview</th>
-                 
                 </tr>
               </thead>
               <tbody>
@@ -113,17 +173,16 @@ const Pricing = () => {
                     <td className="p-4 border-b border-gray-200">
                       {plan.features.join(", ")}
                     </td>
-                   
                     <td className="p-4 border-b border-gray-200 text-center">
                       <div className="flex gap-2 justify-center items-center">
                         <button
-                          onClick={openEditModal}
+                          onClick={() => openEditModal(plan)}
                           className="px-4 py-2 bg-yellow-400 text-white rounded-md flex items-center gap-2 hover:bg-yellow-500 transition">
                           <IoPencil />
                           Edit
                         </button>
                         <button
-                          onClick={openDeleteModal}
+                          onClick={() => openDeleteModal(plan)}
                           className="px-4 py-2 bg-red-500 text-white rounded-md flex items-center gap-2 hover:bg-red-600 transition">
                           <IoTrash />
                           Delete
@@ -146,7 +205,8 @@ const Pricing = () => {
         </div>
       </div>
 
-      {isEditModalOpen && (
+      {/* Edit Plan Modal */}
+      {isEditModalOpen && selectedPlan && (
         <div className="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 flex">
           <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-2xl font-semibold mb-4">Edit Plan</h2>
@@ -154,18 +214,35 @@ const Pricing = () => {
               <input
                 type="text"
                 placeholder="Plan Name"
-                className="w-full px-4 py-2 border rounded-lg"/>
+                value={selectedPlan.name}
+                onChange={(e) => setSelectedPlan({ ...selectedPlan, name: e.target.value })}
+                className="w-full px-4 py-2 border rounded-lg"
+              />
               <input
                 type="text"
                 placeholder="Monthly Price"
-                className="w-full px-4 py-2 border rounded-lg"/>
+                value={selectedPlan.monthlyPrice}
+                onChange={(e) => setSelectedPlan({ ...selectedPlan, monthlyPrice: e.target.value })}
+                className="w-full px-4 py-2 border rounded-lg"
+              />
               <input
                 type="text"
                 placeholder="Yearly Price"
-                className="w-full px-4 py-2 border rounded-lg"/>
+                value={selectedPlan.yearlyPrice}
+                onChange={(e) => setSelectedPlan({ ...selectedPlan, yearlyPrice: e.target.value })}
+                className="w-full px-4 py-2 border rounded-lg"
+              />
               <textarea
                 placeholder="Features (comma-separated)"
-                className="w-full px-4 py-2 border rounded-lg"></textarea>
+                value={selectedPlan.features.join(", ")}
+                onChange={(e) =>
+                  setSelectedPlan({
+                    ...selectedPlan,
+                    features: e.target.value.split(",").map((feature) => feature.trim()),
+                  })
+                }
+                className="w-full px-4 py-2 border rounded-lg"
+              />
             </div>
             <div className="flex justify-end gap-4 mt-4">
               <button
@@ -174,7 +251,7 @@ const Pricing = () => {
                 Cancel
               </button>
               <button
-                onClick={closeModals}
+                onClick={handleEditPlan}
                 className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
                 Save Changes
               </button>
@@ -183,7 +260,8 @@ const Pricing = () => {
         </div>
       )}
 
-      {isDeleteModalOpen && (
+      {/* Delete Plan Modal */}
+      {isDeleteModalOpen && selectedPlan && (
         <div className="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 flex">
           <div className="bg-white px-6 py-8 rounded shadow-md max-w-sm w-full text-center">
             <p className="text-lg font-medium mb-4">
@@ -191,7 +269,7 @@ const Pricing = () => {
             </p>
             <div className="flex justify-center gap-4">
               <button
-                onClick={closeModals}
+                onClick={handleDeletePlan}
                 className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
                 Delete
               </button>
@@ -205,6 +283,7 @@ const Pricing = () => {
         </div>
       )}
 
+      {/* Preview Plan Modal */}
       {isPreviewModalOpen && selectedPlan && (
         <div className="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 flex">
           <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
