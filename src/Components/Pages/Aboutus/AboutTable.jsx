@@ -5,11 +5,10 @@ import { IoEye, IoPencil, IoTrash } from 'react-icons/io5';
 function AboutTable({ banners, handleEditClick, handleDeleteClick, handlePreviewClick }) {
 
   const [table, setTable] = useState([]);
-  const [deletes, setDeletes] = useState(null);
 
   const getdata = () => {
     axios
-      .get("http://192.168.1.128:3004/aboutsection")
+      .get("http://192.168.1.128:3001/aboutsection")
       .then((result) => {
         console.log(result.data);
         setTable([...result.data]);
@@ -22,8 +21,6 @@ function AboutTable({ banners, handleEditClick, handleDeleteClick, handlePreview
   useEffect(() => {
     getdata();
   }, []);
-
-  // Function to remove HTML tags from a string
   const removeHtmlTags = (text) => {
     return text.replace(/<[^>]+>/g, '');
   };

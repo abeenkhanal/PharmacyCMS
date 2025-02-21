@@ -1,12 +1,23 @@
 // TestimonialsForm.jsx
 import React from "react";
 import JoditEditor from "jodit-react";
+import { Formik } from 'formik';
 
 const TestimonialsForm = () => {
   return (
     <div className="p-6">
       <h2 className="text-xl font-semibold mb-4 text-gray-700">Edit Testimonial</h2>
-      <form className="space-y-6">
+     <Formik 
+     initialValues={{
+       name:"",
+       position:"",
+       testimonial:""
+     }}
+     onSubmit={(values)=>{
+        console.log(values)
+      }}
+     >
+     <form className="space-y-6">
         <div>
           <label className="block text-gray-600 font-medium mb-1">Client Name</label>
           <input
@@ -46,6 +57,7 @@ const TestimonialsForm = () => {
           </button>
         </div>
       </form>
+     </Formik>
     </div>
   );
 };

@@ -8,7 +8,14 @@ import TestimonialsEditDelete from "./TestimonialsEditDelete";
 
 const Testimonials = () => {
   const [testimonials] = useState([
-    // Same testimonial data as before...
+    {
+      id: 1,
+      name: "John Doe",
+      role: "CEO, Company",
+      feedback: "This is a testimonial.",
+      },
+    
+
   ]);
 
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -47,8 +54,8 @@ const Testimonials = () => {
       </div>
 
       {/* Modals */}
-      {editModalVisible && <div>...Edit Modal...</div>}
-      {deleteModalVisible && <div>...Delete Modal...</div>}
+   
+   
       <TestimonialsPreviewModel previewData={previewData} closeModals={closeModals} />
     </div>
   );

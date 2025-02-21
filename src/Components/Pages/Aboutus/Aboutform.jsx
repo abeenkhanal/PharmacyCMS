@@ -6,6 +6,9 @@ const Aboutform = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [loadingImage, setloadingImage] = useState(false);
 
+  
+
+
   const changeImage = async (e, b) => {
     try {
       setImagePreview(null)
@@ -87,7 +90,7 @@ const Aboutform = () => {
                       <img src={imagePreview} alt="Preview" className="w-48 object-contain h-24 rounded-lg" />
                     </div>
                   ) : loadingImage == true ? <div>loading..........</div> : <div className="w-48 h-24 bg-gray-100">
-                   fsf
+                    fsf
                   </div>}
                 </label>
               </div>

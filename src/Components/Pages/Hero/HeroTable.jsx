@@ -16,12 +16,10 @@ const HeroTable = ({ handleEditClick, handleDeleteClick, handlePreviewClick }) =
         console.error(error);
       });
   };
-
   // Fetch the data when the component mounts
   useEffect(() => {
     getData();
   }, []);
-
   // Function to remove HTML tags from a string
   const removeHtmlTags = (text) => {
     return text.replace(/<[^>]+>/g, '');
@@ -57,15 +55,13 @@ const HeroTable = ({ handleEditClick, handleDeleteClick, handlePreviewClick }) =
                   <div className="flex gap-2 justify-center items-center">
                     <button
                       onClick={() => handleEditClick(banner.id)}
-                      className="px-4 py-2 bg-yellow-400 text-white rounded-md flex items-center gap-2 hover:bg-yellow-500 transition"
-                    >
+                      className="px-4 py-2 bg-yellow-400 text-white rounded-md flex items-center gap-2 hover:bg-yellow-500 transition">
                       <IoPencil />
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteClick(banner.id)}
-                      className="px-4 py-2 bg-red-500 text-white rounded-md flex items-center gap-2 hover:bg-red-600 transition"
-                    >
+                      className="px-4 py-2 bg-red-500 text-white rounded-md flex items-center gap-2 hover:bg-red-600 transition">
                       <IoTrash />
                       Delete
                     </button>
@@ -74,8 +70,7 @@ const HeroTable = ({ handleEditClick, handleDeleteClick, handlePreviewClick }) =
                 <td className="p-4 text-center border-b border-gray-200">
                   <button
                     onClick={() => handlePreviewClick(banner)}
-                    className="px-4 py-2 bg-green-500 text-white rounded-md flex items-center gap-2 hover:bg-green-600 transition"
-                  >
+                    className="px-4 py-2 bg-green-500 text-white rounded-md flex items-center gap-2 hover:bg-green-600 transition">
                     <IoEye />
                     Preview
                   </button>

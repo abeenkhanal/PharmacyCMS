@@ -1,8 +1,29 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 import { IoEye, IoPencil, IoTrash } from 'react-icons/io5'
 
 
 const BannerTable = ({ banners, handleEditClick, handleDeleteClick, handlePreviewClick }) => {
+  const [banner, setBanner] = useState([]);
+
+  const getdata = () => {
+    axios
+      .get("http://192.168.1.128:3001/banner-section")
+      .then((result) => {
+        console.log(result.data);
+        setBanner([...result.data]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getdata();
+  }, []);
+
+
+
   return (
     <div className="bg-white w-11/12 mx-auto border rounded py-6 shadow-md">
     <h2 className="text-lg w-11/12 mx-auto font-medium mb-4">Manage Banners</h2>
@@ -17,10 +38,10 @@ const BannerTable = ({ banners, handleEditClick, handleDeleteClick, handlePrevie
           </tr>
         </thead>
         <tbody>
-          {banners.map((banner) => (
-            <tr key={banner.id} className="hover:bg-gray-50 transition">
-              <td className="p-4 border-b border-gray-200">{banner.title}</td>
-              <td className="p-4 border-b border-gray-200">{banner.subtitle}</td>
+          {banner.map((bannero, i) => (
+            <tr key={i} className="hover:bg-gray-50 transition">
+              <td className="p-4 border-b border-gray-200">{bannero.title}</td>
+              <td className="p-4 border-b border-gray-200">{bannero.description}</td>
               <td className="p-4 text-center border-b border-gray-200">
                 <div className="flex gap-2 justify-center items-center">
                   <button
